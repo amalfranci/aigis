@@ -847,23 +847,25 @@ function trapUnhandledErrors() {
 var tracingSrvxPlugins = [];
 //#endregion
 //#region ../../dev-server/node_modules/nitro/dist/presets/node/runtime/node-server.mjs
-var _parsedPort = Number.parseInt(process.env.NITRO_PORT ?? process.env.PORT ?? "");
-var port = Number.isNaN(_parsedPort) ? 3e3 : _parsedPort;
-var host = process.env.NITRO_HOST || process.env.HOST;
-var cert = process.env.NITRO_SSL_CERT;
-var key = process.env.NITRO_SSL_KEY;
 var nitroApp = useNitroApp();
-serve({
-	port,
-	hostname: host,
-	tls: cert && key ? {
-		cert,
-		key
-	} : void 0,
-	fetch: nitroApp.fetch,
-	plugins: [...tracingSrvxPlugins]
-});
-trapUnhandledErrors();
-var node_server_default = {};
+if (!process.env.VERCEL) {
+	var _parsedPort = Number.parseInt(process.env.NITRO_PORT ?? process.env.PORT ?? "");
+	var port = Number.isNaN(_parsedPort) ? 3e3 : _parsedPort;
+	var host = process.env.NITRO_HOST || process.env.HOST;
+	var cert = process.env.NITRO_SSL_CERT;
+	var key = process.env.NITRO_SSL_KEY;
+	serve({
+		port,
+		hostname: host,
+		tls: cert && key ? {
+			cert,
+			key
+		} : void 0,
+		fetch: nitroApp.fetch,
+		plugins: [...tracingSrvxPlugins]
+	});
+	trapUnhandledErrors();
+}
+var node_server_default = nitroApp;
 //#endregion
 export { node_server_default as default };
